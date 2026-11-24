@@ -1,0 +1,29 @@
+rules_version = '2';
+
+// Firestore in the shared project github-games-e7c7d. This file is the
+// project's WHOLE rule set (deploying replaces every rule), so it carries the
+// rules of every app that uses Firestore: keep it identical to the copy in
+// ../Bridge-Master (and any other Firestore app) when either changes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Bridge Master progress: one document per signed-in user, readable and
+    // writable only by that user. { deals: { "1A-7": { b, t, at } }, updated }
+    match /bridgeMaster/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['deals', 'updated'])
+        && request.resource.data.deals is map;
+    }
+
+    // Poker Trainer progress: one document per signed-in user, readable and
+    // writable only by that user. Each device writes only its own entry, so
+    // counters merge without conflicts:
+    // { devices: { "<deviceId>": { spots, days, misses, at } }, updated }
+    match /pokerTrainer/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['devices', 'updated'])
+        && request.resource.data.devices is map;
+    }
+  }
+}

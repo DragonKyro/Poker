@@ -1,0 +1,107 @@
+/* Range grids, strategy bars, legends, combo and hand-type lists. */
+
+.pf-range, .po-range { display: flex; flex-direction: column; gap: 12px; }
+.pf-range-grid { container-type: inline-size; width: 100%; }
+
+.range-grid {
+  display: grid;
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 2px;
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.rg-cell {
+  position: relative;
+  border: 0;
+  padding: 0;
+  border-radius: 3px;
+  background: #182030;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 120ms var(--spring);
+}
+.rg-cell.is-pair { background: #1d2638; }
+.rg-cell.is-suited { background: #19212f; }
+.rg-cell:hover { transform: scale(1.08); z-index: 3; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); }
+.rg-fill { position: absolute; left: 0; right: 0; bottom: 0; display: flex; animation: fill-in 420ms var(--ease-out) both; transform-origin: bottom; }
+.rg-fill > span { height: 100%; min-width: 0; }
+@keyframes fill-in { from { transform: scaleY(0); } }
+.rg-label {
+  position: relative;
+  z-index: 1;
+  font-size: max(7px, calc(100cqw / 13 * 0.3));
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+.rg-cell.is-out .rg-label { color: var(--fg-faint); text-shadow: none; font-weight: 600; }
+.rg-cell.is-active { outline: 2px solid var(--gold-hi); outline-offset: -1px; z-index: 4; animation: cell-pulse 1.4s ease-in-out infinite; }
+@keyframes cell-pulse { 50% { box-shadow: 0 0 0 4px rgba(255, 224, 138, 0.35), 0 0 18px rgba(255, 224, 138, 0.6); } }
+.rg-select {
+  position: absolute;
+  pointer-events: none;
+  width: calc((100% - 24px) / 13);
+  height: calc((100% - 24px) / 13);
+  left: calc(var(--c) * ((100% - 24px) / 13 + 2px));
+  top: calc(var(--r) * ((100% - 24px) / 13 + 2px));
+  border-radius: 3px;
+  box-shadow: 0 0 0 2px #fff;
+  z-index: 5;
+}
+
+.cell-info { min-height: 26px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; }
+.cell-info-hand { font-family: var(--display); font-size: 16px; min-width: 40px; }
+.cell-info-mix { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.cell-info-act { display: inline-flex; align-items: center; gap: 5px; }
+.cell-info-act i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.spot-note { margin: 0; font-size: 13.5px; color: var(--fg-muted); line-height: 1.5; border-left: 3px solid var(--gold-deep); padding-left: 10px; }
+
+/* ---------- strategy bar ---------- */
+
+.sbar { display: flex; flex-direction: column; gap: 6px; }
+.sbar-track { display: flex; height: 26px; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+.sbar.is-compact .sbar-track { height: 12px; border-radius: 6px; }
+.sbar-seg { display: grid; place-items: center; min-width: 0; position: relative; transition: flex-grow 400ms var(--ease-out); animation: seg-in 500ms var(--ease-out) both; transform-origin: left; }
+.sbar-seg b { font-size: 12px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+.sbar-seg.is-chosen { box-shadow: inset 0 0 0 2px #fff; }
+@keyframes seg-in { from { transform: scaleX(0); } }
+.sbar-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; }
+.sbar-key { display: inline-flex; align-items: center; gap: 6px; color: var(--fg-muted); padding: 1px 0; border-radius: 6px; }
+.sbar-key i { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.sbar-key .sbar-name { color: var(--fg); font-weight: 600; }
+.sbar-key .sbar-pct { font-weight: 700; color: var(--fg); }
+.sbar-key .sbar-ev { font-size: 12px; color: var(--fg-faint); }
+.sbar-key.is-chosen { outline: 1.5px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; padding: 0 4px; }
+.sbar-key.is-target .sbar-name::after { content: ' ★'; color: var(--gold); }
+
+/* ---------- combos and hand types ---------- */
+
+.combo-list { display: flex; flex-direction: column; gap: 4px; min-height: 30px; }
+.combo-list-h { display: flex; gap: 8px; align-items: baseline; font-size: 13px; }
+.combo-list-h b { font-family: var(--display); font-size: 15px; }
+.combo-row { display: grid; grid-template-columns: 62px 1fr 46px; gap: 10px; align-items: center; font-size: 13px; padding: 3px 6px; border-radius: 8px; }
+.combo-row.is-hero { background: rgba(255, 224, 138, 0.1); box-shadow: inset 0 0 0 1px rgba(255, 224, 138, 0.35); }
+.combo-bar { display: flex; height: 12px; border-radius: 4px; overflow: hidden; background: rgba(255, 255, 255, 0.05); }
+.combo-bar > span { min-width: 0; display: grid; place-items: center; }
+.combo-ev { text-align: right; color: var(--fg-muted); font-size: 12px; }
+
+.bucket-list { display: flex; flex-direction: column; gap: 8px; }
+.bucket-row { display: grid; grid-template-columns: 150px 1fr; gap: 10px; align-items: center; font-size: 13px; }
+.bucket-bar { height: 20px; border-radius: 6px; }
+.bucket-bar b { font-size: 11px; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+
+.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 2px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { border: none; background: transparent; color: var(--fg-muted); padding: 8px 12px; border-radius: 9px; font-size: 13px; font-weight: 650; white-space: nowrap; display: inline-flex; flex-direction: column; align-items: center; line-height: 1.2; transition: background 140ms, color 140ms; }
+.tab[aria-pressed='true'] { background: linear-gradient(180deg, rgba(255, 224, 138, 0.22), rgba(242, 193, 78, 0.12)); color: var(--gold-hi); box-shadow: inset 0 0 0 1px rgba(242, 193, 78, 0.35); }
+.tab-sub { font-size: 10px; opacity: 0.7; font-weight: 600; }
+.tabs-sm .tab { padding: 6px 10px; }
+
+.mini-card { width: 30px; }
