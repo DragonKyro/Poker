@@ -1,6 +1,9 @@
 /* Range grids, strategy bars, legends, combo and hand-type lists. */
 
 .pf-range, .po-range { display: flex; flex-direction: column; gap: 12px; }
+.range-cap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 12px; margin-bottom: -6px; }
+.range-cap b { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--fg-muted); }
+.cell-info-tag { font-size: 10.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.7px; color: #1c1300; background: var(--gold); padding: 2px 7px; border-radius: 999px; }
 .pf-range-grid { container-type: inline-size; width: 100%; }
 
 .range-grid {

@@ -45,15 +45,17 @@ Import directions: `ui → store → train/preflop/postflop → solver → poker
 - The 9-max ↔ 6-max mapping (LJ ≈ 6-max UTG) is deliberate: same number of players behind.
 - One colour per action everywhere (`--a-fold` blue, `--a-call` green, bets amber → red by size, `--a-allin` magenta). Every animation has a reduced-motion fallback (`theme.css` bottom).
 - The PWA precaches the shell and charts; solved flops are built into `assets/flops/` (vite.config.ts `chunkFileNames`) and runtime-cached (CacheFirst) as they're used, so the first visit stays ~2 MB.
-- Headless screenshots: Chrome on Windows has a ~500 px minimum window width; emulate a phone with `--force-device-scale-factor=1.5 --window-size=585,1266` (a 390 px CSS viewport), not a small window.
+- Drill pages are a fixed-height grid (`100dvh`, rows: top bar / session bar / table / controls). Each child is pinned to its row in `table.css` — hiding one (the session bar under 640 px of height) must not shift the others. The table has no minimum height (it scales with `cqh`) so the controls, including Next, always fit; check short windows (960×450, 768×350) as well as phones.
+- Headless screenshots: Chrome on Windows has a ~500 px minimum window width; emulate a phone with `--force-device-scale-factor=1.5 --window-size=585,1266` (a 390 px CSS viewport), not a small window. Keep `--virtual-time-budget` around 8–16 s; much longer budgets tend to give blank screenshots.
 
 ## Firebase (shared project)
 
 Project `github-games-e7c7d` is shared with Bridge Master, tractor, catan and others. This app uses Firestore `(default)` and Auth:
 
 - Document `pokerTrainer/{uid}` = `{ devices: { "<deviceId>": { spots, days, misses, at } }, updated }`. Each device writes only its own entry.
-- `firestore.rules` is the **whole project's** Firestore rule set (deploying replaces every rule). It contains Bridge Master's `bridgeMaster/{uid}` block plus ours. Keep it identical to `../Bridge-Master/firestore.rules` when either changes.
+- `firestore.rules` is the **whole project's** Firestore rule set (deploying replaces every rule). It contains Bridge Master's `bridgeMaster/{uid}`, BlackJack's `blackjack/{uid}` and our `pokerTrainer/{uid}` blocks. Keep it identical to `../Bridge-Master/firestore.rules` and `../BlackJack/firestore.rules`; change all three, then deploy from any one.
 - Google sign-in must be enabled and `dragonkyro.github.io` an authorized domain (already the case for Bridge Master).
+- The merged three-app rules were deployed on 2026-11-24.
 
 ## Conventions
 

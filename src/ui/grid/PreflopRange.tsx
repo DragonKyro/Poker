@@ -26,6 +26,10 @@ export function PreflopRange({ spot, highlight, showNote = true }: { spot: Prefl
   const labels = spot.actions.map((a) => a.label);
   return (
     <div className="pf-range">
+      <div className="range-cap">
+        <b>Whole range</b>
+        <span className="faint">how all {Math.round(inRange)} combos that reach this spot play</span>
+      </div>
       <StrategyBar labels={labels} freqs={totals} colors={data.colors} />
       <div className="pf-range-grid" onPointerLeave={() => setSel(null)}>
         <RangeGrid data={data} highlight={hi} selected={sel} onPick={setSel} />
@@ -33,6 +37,7 @@ export function PreflopRange({ spot, highlight, showNote = true }: { spot: Prefl
       <div className="cell-info">
         {shown !== null ? (
           <>
+            <span className="cell-info-tag">{sel === null && shown === hi ? 'Your hand' : 'Hand'}</span>
             <b className="cell-info-hand">{HAND_CLASSES[shown]}</b>
             {spot.reach[shown]! < 0.004 ? (
               <span className="faint">Not in range here</span>

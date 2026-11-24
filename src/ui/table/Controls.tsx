@@ -118,6 +118,18 @@ export function Feedback({
             −{grade.evLoss.toFixed(2)} bb{grade.evLossPot !== undefined ? ` · ${(grade.evLossPot * 100).toFixed(1)}% pot` : ''}
           </span>
         )}
+        {/* The buttons sit in the header row so the panel stays short on small windows. */}
+        <span className="fb-buttons">
+          {onRange && (
+            <button type="button" className="btn btn-ghost btn-sm" onClick={onRange}>
+              <Icon name="grid" size="sm" /> Range
+            </button>
+          )}
+          <button type="button" className="btn btn-sm fb-next" onClick={onNext}>
+            Next <Icon name="next" size="sm" />
+            <span className="kbd">Space</span>
+          </button>
+        </span>
       </div>
       <StrategyBar labels={labels} freqs={freqs} colors={colors} chosen={chosen} target={roll !== undefined ? grade.target : undefined} evs={evs} />
       {roll !== undefined && (
@@ -126,17 +138,6 @@ export function Feedback({
         </p>
       )}
       {detail}
-      <div className="fb-buttons">
-        {onRange && (
-          <button type="button" className="btn btn-ghost" onClick={onRange}>
-            <Icon name="grid" size="sm" /> Range
-          </button>
-        )}
-        <button type="button" className="btn fb-next" onClick={onNext}>
-          Next hand <Icon name="next" size="sm" />
-          <span className="kbd">Space</span>
-        </button>
-      </div>
     </div>
   );
 }

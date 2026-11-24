@@ -33,6 +33,7 @@ export function PostflopRange({ data, node, heroCombo, wide }: { data: SolvedFlo
         {shown !== null && (
           <>
             <div className="combo-list-h">
+              <span className="cell-info-tag">{sel === null && shown === heroCls ? 'Your hand' : 'Hand'}</span>
               <b>{HAND_CLASSES[shown]}</b>
               <span className="faint">{combos.filter((c) => c.reach > 0.004).length ? 'combos here · EV of the best play' : 'not in range here'}</span>
             </div>
@@ -82,6 +83,10 @@ export function PostflopRange({ data, node, heroCombo, wide }: { data: SolvedFlo
   if (wide) {
     return (
       <div className="po-range is-wide">
+      <div className="range-cap">
+        <b>Whole range</b>
+        <span className="faint">how every hand the {node.player === 0 ? 'out-of-position' : 'in-position'} player can have here plays</span>
+      </div>
         <StrategyBar labels={labels} freqs={totals} colors={colors} />
         <div className="po-wide">
           <div className="po-wide-col">{gridBlock}</div>
@@ -95,6 +100,10 @@ export function PostflopRange({ data, node, heroCombo, wide }: { data: SolvedFlo
   }
   return (
     <div className="po-range">
+      <div className="range-cap">
+        <b>Whole range</b>
+        <span className="faint">how every hand the {node.player === 0 ? 'out-of-position' : 'in-position'} player can have here plays</span>
+      </div>
       <StrategyBar labels={labels} freqs={totals} colors={colors} />
       <div className="tabs tabs-sm">
         <button type="button" className="tab" aria-pressed={tab === 'grid'} onClick={() => setTab('grid')}>
